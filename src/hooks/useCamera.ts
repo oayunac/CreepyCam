@@ -90,8 +90,8 @@ export function useCamera() {
       const firstFull = frames[0].toDataURL('image/jpeg', 0.9);
 
       // individual frame thumbnails for animation (same size as one grid cell)
-      const thumbW = Math.round(modelSize / cols);
-      const thumbH = Math.round((thumbW / video.videoWidth) * video.videoHeight);
+      const thumbW = modelSize;
+      const thumbH = Math.round((modelSize / video.videoWidth) * video.videoHeight);
       const frameThumbs = frames.map((f) => {
         const tc = document.createElement('canvas');
         tc.width = thumbW;
@@ -100,9 +100,9 @@ export function useCamera() {
         return tc.toDataURL('image/jpeg', 0.8);
       });
 
-      // composite grid for model
-      const cellW = Math.round(modelSize / cols);
-      const cellH = Math.round(modelSize / rows);
+      // composite grid for model — modelSize is per-cell size
+      const cellW = modelSize;
+      const cellH = Math.round((modelSize / video.videoWidth) * video.videoHeight);
       const gridCanvas = document.createElement('canvas');
       gridCanvas.width = cellW * cols;
       gridCanvas.height = cellH * rows;

@@ -52,7 +52,7 @@ const strings = {
   model: { en: 'Model', zh: '模型' },
   apiKey: { en: 'API Key (optional)', zh: 'API Key（可选）' },
   captureInterval: { en: 'Capture Interval (seconds)', zh: '捕获间隔（秒）' },
-  modelImageSize: { en: 'Model Image Size (px)', zh: '模型图片尺寸（像素）' },
+  modelImageSize: { en: 'Per-frame Size (px)', zh: '单帧尺寸（像素）' },
   maxTokens: { en: 'Max Tokens', zh: '最大 Token 数' },
   enableNotifications: { en: 'Enable Browser Notifications', zh: '启用浏览器通知' },
   setupNotes: { en: 'Setup Notes', zh: '配置说明' },
