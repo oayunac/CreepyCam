@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { DetectionRecord, AppSettings } from '../types';
 import { t, getBehaviorLabelI18n } from '../i18n';
+import { AnimatedFrames } from './AnimatedFrames';
 
 interface Props {
   records: DetectionRecord[];
@@ -83,7 +84,7 @@ export function DetectionHistory({ records, settings, pendingThumbnail, onClear 
               className={`history-item ${record.result.detected ? 'alert' : ''}`}
               onClick={() => setSelectedRecord(record)}
             >
-              <img src={record.thumbnailDataUrl} alt="" className="history-thumb" />
+              <AnimatedFrames frames={record.frames} className="history-thumb" />
               <div className="history-info">
                 {record.result.detected ? (
                   <div className="behavior-tags">

@@ -60,7 +60,7 @@ function App() {
       <div className="app">
         <header className="app-header">
           <div className="header-left">
-            <h1>CreepyCam</h1>
+            <h1>{t('appName', loc)}</h1>
             <p className="subtitle">{t('subtitle', loc)}</p>
           </div>
           <button

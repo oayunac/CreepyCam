@@ -2,7 +2,8 @@ export type Locale = 'en' | 'zh';
 
 const strings = {
   // Header
-  subtitle: { en: 'I see what you did there...', zh: '我看到你做了什么...' },
+  appName: { en: 'CreepyCam', zh: '抓个正着' },
+  subtitle: { en: 'I see what you did there...', zh: '有人在盯着你...' },
 
   // Camera
   cameraOff: { en: 'Camera is off', zh: '摄像头已关闭' },

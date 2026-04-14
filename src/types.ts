@@ -27,7 +27,8 @@ export interface DetectionRecord {
   id: string;
   timestamp: number;
   result: DetectionResult;
-  thumbnailDataUrl: string;
+  frames: string[];
+  gridDataUrl: string;
   fullImageDataUrl: string;
 }
 

@@ -5,7 +5,7 @@ import { createProvider, buildPrompt } from '../providers';
 
 export function useDetection(
   settings: AppSettings,
-  captureGrid: (modelSize: number, count?: number, intervalMs?: number) => Promise<{ grid: string; firstFull: string } | null>,
+  captureGrid: (modelSize: number, count?: number, intervalMs?: number) => Promise<{ grid: string; firstFull: string; frameThumbs: string[] } | null>,
   isActive: boolean,
 ) {
   const [records, setRecords] = useState<DetectionRecord[]>([]);
@@ -42,7 +42,8 @@ export function useDetection(
         id: crypto.randomUUID(),
         timestamp: Date.now(),
         result,
-        thumbnailDataUrl: capture.grid,
+        frames: capture.frameThumbs,
+        gridDataUrl: capture.grid,
         fullImageDataUrl: capture.firstFull,
       };
 

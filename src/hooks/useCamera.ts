@@ -64,7 +64,7 @@ export function useCamera() {
       modelSize: number,
       count = 9,
       intervalMs = 500,
-    ): Promise<{ grid: string; firstFull: string } | null> => {
+    ): Promise<{ grid: string; firstFull: string; frameThumbs: string[] } | null> => {
       const video = videoRef.current;
       if (!video || !isActive) return null;
 
@@ -89,6 +89,16 @@ export function useCamera() {
       // first frame as full-res evidence image
       const firstFull = frames[0].toDataURL('image/jpeg', 0.9);
 
+      // individual frame thumbnails for animation
+      const thumbScale = Math.min(160 / video.videoWidth, 90 / video.videoHeight);
+      const frameThumbs = frames.map((f) => {
+        const tc = document.createElement('canvas');
+        tc.width = Math.round(video.videoWidth * thumbScale);
+        tc.height = Math.round(video.videoHeight * thumbScale);
+        tc.getContext('2d')!.drawImage(f, 0, 0, tc.width, tc.height);
+        return tc.toDataURL('image/jpeg', 0.7);
+      });
+
       // composite grid for model
       const cellW = Math.round(modelSize / cols);
       const cellH = Math.round(modelSize / rows);
@@ -104,7 +114,7 @@ export function useCamera() {
       });
 
       const grid = gridCanvas.toDataURL('image/jpeg', 0.8);
-      return { grid, firstFull };
+      return { grid, firstFull, frameThumbs };
     },
     [isActive],
   );
