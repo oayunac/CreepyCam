@@ -90,18 +90,19 @@ function App() {
           />
         )}
 
-        <main className="app-main">
-          <section className="camera-section">
-            <div className="video-container">
-              <video ref={videoRef} playsInline muted className="camera-feed" />
-              {!isActive && (
-                <div className="video-placeholder">
-                  <p>{t('cameraOff', loc)}</p>
-                </div>
-              )}
-              {isAnalyzing && <div className="analyzing-overlay">{t('analyzing', loc)}</div>}
-            </div>
+        {/* Camera — inline when idle, floating PiP when monitoring */}
+        <div className={`video-wrapper ${isRunning ? 'pip' : ''}`}>
+          <div className="video-container">
+            <video ref={videoRef} playsInline muted className="camera-feed" />
+            {!isActive && (
+              <div className="video-placeholder">
+                <p>{t('cameraOff', loc)}</p>
+              </div>
+            )}
+            {isAnalyzing && <div className="analyzing-overlay">{t('analyzing', loc)}</div>}
+          </div>
 
+          {!isRunning && (
             <div className="controls">
               <button
                 className={`btn ${isActive ? 'btn-danger' : 'btn-primary'}`}
@@ -117,28 +118,44 @@ function App() {
                 {isRunning ? t('stopMonitoring', loc) : t('startMonitoring', loc)}
               </button>
             </div>
+          )}
 
+          {isRunning && (
+            <div className="pip-controls">
+              <button
+                className="btn btn-danger btn-pip"
+                onClick={handleToggleDetection}
+              >
+                {t('stopMonitoring', loc)}
+              </button>
+            </div>
+          )}
+        </div>
+
+        {!isRunning && (
+          <div className="controls-inline">
             {cameraError && <p className="error-msg">Camera: {cameraError}</p>}
             {lastError && <p className="error-msg">Detection: {lastError}</p>}
+          </div>
+        )}
 
-            {isRunning && (
-              <div className="status-bar">
-                <span className="status-dot pulse" />
-                {t('monitoringEvery', loc)} {settings.captureIntervalSeconds}{t('monitoringUnit', loc)}
-                {' \u00b7 '}Provider: {settings.provider.type}
-                {' \u00b7 '}Model: {settings.provider.model}
-              </div>
-            )}
-          </section>
+        {isRunning && (
+          <div className="status-bar">
+            <span className="status-dot pulse" />
+            {t('monitoringEvery', loc)} {settings.captureIntervalSeconds}{t('monitoringUnit', loc)}
+            {' \u00b7 '}Provider: {settings.provider.type}
+            {' \u00b7 '}Model: {settings.provider.model}
+            {lastError && <span className="status-error"> · {lastError}</span>}
+          </div>
+        )}
 
-          <section className="history-section">
-            <DetectionHistory
-              records={records}
-              settings={settings}
-              pendingThumbnail={pendingThumbnail}
-              onClear={clearRecords}
-            />
-          </section>
+        <main className="app-main">
+          <DetectionHistory
+            records={records}
+            settings={settings}
+            pendingThumbnail={pendingThumbnail}
+            onClear={clearRecords}
+          />
         </main>
       </div>
     </div>

@@ -71,37 +71,45 @@ export function DetectionHistory({ records, settings, pendingThumbnail, onClear 
           {records.length === 0 ? t('nothingYet', loc) : t('noDetections', loc)}
         </p>
       ) : (
-        <div className="history-list">
+        <div className="history-grid">
           {!focusedOnly && pendingThumbnail && (
-            <div className="history-item pending">
-              <img src={pendingThumbnail} alt="" className="history-thumb" />
-              <div className="history-info">
-                <span className="badge badge-pending">{t('analyzingBadge', loc)}</span>
-                <p className="evidence-text pending-text">{t('watchingClosely', loc)}</p>
+            <div className="grid-card pending">
+              <div className="grid-card-thumb">
+                <img src={pendingThumbnail} alt="" />
+                <div className="pending-overlay">
+                  <div className="pending-spinner" />
+                </div>
               </div>
-              <div className="pending-spinner" />
+              <div className="grid-card-info">
+                <span className="badge badge-pending">{t('analyzingBadge', loc)}</span>
+                <p className="grid-card-whisper pending-text">{t('watchingClosely', loc)}</p>
+              </div>
             </div>
           )}
           {displayed.map((record) => (
             <div
               key={record.id}
-              className={`history-item ${record.result.detected ? 'alert' : ''}`}
+              className={`grid-card ${record.result.detected ? 'alert' : ''}`}
               onClick={() => setSelectedRecord(record)}
             >
-              <AnimatedFrames frames={record.frames} className="history-thumb" />
-              <div className="history-info">
-                {record.result.detected ? (
-                  <div className="behavior-tags">
-                    {record.result.behaviors.map((b) => (
-                      <span key={b} className="badge badge-alert">
-                        {getBehaviorLabelI18n(b, loc, settings.customBehaviors)}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <span className="badge badge-ok">{t('ok', loc)}</span>
-                )}
-                <p className="evidence-text whisper-text">{record.result.message}</p>
+              <div className="grid-card-thumb">
+                <AnimatedFrames frames={record.frames} className="grid-card-img" />
+                <div className="grid-card-overlay">
+                  {record.result.detected ? (
+                    <div className="behavior-tags">
+                      {record.result.behaviors.map((b) => (
+                        <span key={b} className="badge badge-alert">
+                          {getBehaviorLabelI18n(b, loc, settings.customBehaviors)}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="badge badge-ok">{t('ok', loc)}</span>
+                  )}
+                </div>
+              </div>
+              <div className="grid-card-info">
+                <p className="grid-card-whisper whisper-text">{record.result.message}</p>
                 <time>{new Date(record.timestamp).toLocaleTimeString()}</time>
               </div>
             </div>
