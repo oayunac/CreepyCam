@@ -918,6 +918,11 @@ body::after {
   display: block;
 }
 
+.grid-card-img.pending-img {
+  object-fit: contain;
+  background: #000;
+}
+
 .grid-card-overlay {
   position: absolute;
   bottom: 0;

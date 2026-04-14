@@ -75,7 +75,7 @@ export function DetectionHistory({ records, settings, pendingThumbnail, onClear 
           {!focusedOnly && pendingThumbnail && (
             <div className="grid-card pending">
               <div className="grid-card-thumb">
-                <img src={pendingThumbnail} alt="" />
+                <img src={pendingThumbnail} alt="" className="grid-card-img pending-img" />
                 <div className="pending-overlay">
                   <div className="pending-spinner" />
                 </div>
