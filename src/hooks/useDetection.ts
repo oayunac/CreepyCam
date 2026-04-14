@@ -5,7 +5,7 @@ import { createProvider, buildPrompt } from '../providers';
 
 export function useDetection(
   settings: AppSettings,
-  captureFrame: (size?: number) => { full: string; thumbnail: string } | null,
+  captureGrid: (modelSize: number, count?: number, intervalMs?: number) => Promise<{ grid: string; firstFull: string } | null>,
   isActive: boolean,
 ) {
   const [records, setRecords] = useState<DetectionRecord[]>([]);
@@ -16,23 +16,25 @@ export function useDetection(
   const timeoutRef = useRef<number | null>(null);
   const runningRef = useRef(false);
   const settingsRef = useRef(settings);
-  const captureFrameRef = useRef(captureFrame);
+  const captureGridRef = useRef(captureGrid);
 
   useEffect(() => { settingsRef.current = settings; }, [settings]);
-  useEffect(() => { captureFrameRef.current = captureFrame; }, [captureFrame]);
+  useEffect(() => { captureGridRef.current = captureGrid; }, [captureGrid]);
 
   const analyzeFrame = useCallback(async () => {
     const s = settingsRef.current;
-    const frame = captureFrameRef.current(s.modelImageSize);
-    if (!frame) return;
 
     setIsAnalyzing(true);
-    setPendingThumbnail(frame.thumbnail);
     setLastError(null);
 
     try {
+      const capture = await captureGridRef.current(s.modelImageSize, 9, 500);
+      if (!capture) return;
+
+      setPendingThumbnail(capture.firstFull);
+
       const provider = createProvider(s.provider, s);
-      const base64 = frame.thumbnail.split(',')[1];
+      const base64 = capture.grid.split(',')[1];
       const prompt = buildPrompt(s);
       const result = await provider.analyze(base64, prompt);
 
@@ -40,8 +42,8 @@ export function useDetection(
         id: crypto.randomUUID(),
         timestamp: Date.now(),
         result,
-        thumbnailDataUrl: frame.thumbnail,
-        fullImageDataUrl: frame.full,
+        thumbnailDataUrl: capture.grid,
+        fullImageDataUrl: capture.firstFull,
       };
 
       setRecords((prev) => [record, ...prev].slice(0, 100));
@@ -50,7 +52,7 @@ export function useDetection(
         sendNotification(
           t('notifCaught', s.locale),
           result.message,
-          frame.thumbnail,
+          capture.firstFull,
         );
       }
     } catch (e) {

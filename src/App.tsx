@@ -23,11 +23,11 @@ function App() {
   const [settings, setSettings] = useState<AppSettings>(loadSettings);
   const [showSettings, setShowSettings] = useState(false);
   const loc = settings.locale;
-  const { videoRef, isActive, error: cameraError, start, stop, captureFrame } = useCamera();
+  const { videoRef, isActive, error: cameraError, start, stop, captureGrid } = useCamera();
   const {
     records, isRunning, isAnalyzing, pendingThumbnail, lastError,
     startDetection, stopDetection, clearRecords,
-  } = useDetection(settings, captureFrame, isActive);
+  } = useDetection(settings, captureGrid, isActive);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));

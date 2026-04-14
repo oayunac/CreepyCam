@@ -59,11 +59,61 @@ export function useCamera() {
     [isActive],
   );
 
+  const captureGrid = useCallback(
+    async (
+      modelSize: number,
+      count = 9,
+      intervalMs = 500,
+    ): Promise<{ grid: string; firstFull: string } | null> => {
+      const video = videoRef.current;
+      if (!video || !isActive) return null;
+
+      const cols = Math.ceil(Math.sqrt(count));
+      const rows = Math.ceil(count / cols);
+
+      const snapOne = () => {
+        const c = document.createElement('canvas');
+        c.width = video.videoWidth;
+        c.height = video.videoHeight;
+        c.getContext('2d')!.drawImage(video, 0, 0);
+        return c;
+      };
+
+      const frames: HTMLCanvasElement[] = [snapOne()];
+      for (let i = 1; i < count; i++) {
+        await new Promise((r) => setTimeout(r, intervalMs));
+        if (!videoRef.current || !streamRef.current) return null;
+        frames.push(snapOne());
+      }
+
+      // first frame as full-res evidence image
+      const firstFull = frames[0].toDataURL('image/jpeg', 0.9);
+
+      // composite grid for model
+      const cellW = Math.round(modelSize / cols);
+      const cellH = Math.round(modelSize / rows);
+      const gridCanvas = document.createElement('canvas');
+      gridCanvas.width = cellW * cols;
+      gridCanvas.height = cellH * rows;
+      const gCtx = gridCanvas.getContext('2d')!;
+
+      frames.forEach((frame, i) => {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        gCtx.drawImage(frame, col * cellW, row * cellH, cellW, cellH);
+      });
+
+      const grid = gridCanvas.toDataURL('image/jpeg', 0.8);
+      return { grid, firstFull };
+    },
+    [isActive],
+  );
+
   useEffect(() => {
     return () => {
       streamRef.current?.getTracks().forEach((t) => t.stop());
     };
   }, []);
 
-  return { videoRef, isActive, error, start, stop, captureFrame };
+  return { videoRef, isActive, error, start, stop, captureFrame, captureGrid };
 }

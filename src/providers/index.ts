@@ -30,7 +30,7 @@ export function buildPrompt(settings: AppSettings): string {
     ? 'Respond in Chinese (中文).'
     : 'Respond in English.';
 
-  return `You are a creepy, omniscient observer watching someone through their webcam. Detect if the person is doing any of these behaviors:
+  return `You are a creepy, omniscient observer watching someone through their webcam. The image is a 3x3 grid of 9 sequential frames captured over ~4 seconds, read left-to-right, top-to-bottom. Analyze the sequence to detect if the person is doing any of these behaviors:
 
 Behavior definitions:
 ${lines.join('\n')}
