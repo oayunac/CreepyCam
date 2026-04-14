@@ -13,7 +13,8 @@ export function useDetection(
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [pendingThumbnail, setPendingThumbnail] = useState<string | null>(null);
   const [lastError, setLastError] = useState<string | null>(null);
-  const intervalRef = useRef<number | null>(null);
+  const timeoutRef = useRef<number | null>(null);
+  const runningRef = useRef(false);
   const settingsRef = useRef(settings);
   const captureFrameRef = useRef(captureFrame);
 
@@ -58,30 +59,34 @@ export function useDetection(
     } finally {
       setIsAnalyzing(false);
       setPendingThumbnail(null);
+      if (runningRef.current) {
+        timeoutRef.current = window.setTimeout(
+          analyzeFrame,
+          settingsRef.current.captureIntervalSeconds * 1000,
+        );
+      }
     }
   }, []);
 
   const startDetection = useCallback(() => {
     if (!isActive) return;
+    runningRef.current = true;
     setIsRunning(true);
     analyzeFrame();
-    intervalRef.current = window.setInterval(
-      analyzeFrame,
-      settingsRef.current.captureIntervalSeconds * 1000,
-    );
   }, [isActive, analyzeFrame]);
 
   const stopDetection = useCallback(() => {
+    runningRef.current = false;
     setIsRunning(false);
-    if (intervalRef.current !== null) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+    if (timeoutRef.current !== null) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
   }, []);
 
   useEffect(() => {
     return () => {
-      if (intervalRef.current !== null) clearInterval(intervalRef.current);
+      if (timeoutRef.current !== null) clearTimeout(timeoutRef.current);
     };
   }, []);
 
