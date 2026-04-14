@@ -6,6 +6,7 @@ import { DetectionHistory } from './components/DetectionHistory';
 import { BehaviorPanel } from './components/BehaviorPanel';
 import type { AppSettings } from './types';
 import { DEFAULT_SETTINGS } from './types';
+import { t } from './i18n';
 import './App.css';
 
 const STORAGE_KEY = 'creepycam-settings';
@@ -21,6 +22,7 @@ function loadSettings(): AppSettings {
 function App() {
   const [settings, setSettings] = useState<AppSettings>(loadSettings);
   const [showSettings, setShowSettings] = useState(false);
+  const loc = settings.locale;
   const { videoRef, isActive, error: cameraError, start, stop, captureFrame } = useCamera();
   const {
     records, isRunning, isAnalyzing, pendingThumbnail, lastError,
@@ -59,12 +61,12 @@ function App() {
         <header className="app-header">
           <div className="header-left">
             <h1>CreepyCam</h1>
-            <p className="subtitle">I see what you did there...</p>
+            <p className="subtitle">{t('subtitle', loc)}</p>
           </div>
           <button
             className="btn-icon"
             onClick={() => setShowSettings(!showSettings)}
-            title="Settings"
+            title={t('settings', loc)}
           >
             {showSettings ? '\u2715' : '\u2699'}
           </button>
@@ -84,10 +86,10 @@ function App() {
               <video ref={videoRef} playsInline muted className="camera-feed" />
               {!isActive && (
                 <div className="video-placeholder">
-                  <p>Camera is off</p>
+                  <p>{t('cameraOff', loc)}</p>
                 </div>
               )}
-              {isAnalyzing && <div className="analyzing-overlay">Analyzing...</div>}
+              {isAnalyzing && <div className="analyzing-overlay">{t('analyzing', loc)}</div>}
             </div>
 
             <div className="controls">
@@ -95,14 +97,14 @@ function App() {
                 className={`btn ${isActive ? 'btn-danger' : 'btn-primary'}`}
                 onClick={handleToggleCamera}
               >
-                {isActive ? 'Stop Camera' : 'Start Camera'}
+                {isActive ? t('stopCamera', loc) : t('startCamera', loc)}
               </button>
               <button
                 className={`btn ${isRunning ? 'btn-danger' : 'btn-success'}`}
                 onClick={handleToggleDetection}
                 disabled={!isActive}
               >
-                {isRunning ? 'Stop Monitoring' : 'Start Monitoring'}
+                {isRunning ? t('stopMonitoring', loc) : t('startMonitoring', loc)}
               </button>
             </div>
 
@@ -112,7 +114,7 @@ function App() {
             {isRunning && (
               <div className="status-bar">
                 <span className="status-dot pulse" />
-                Monitoring every {settings.captureIntervalSeconds}s
+                {t('monitoringEvery', loc)} {settings.captureIntervalSeconds}{t('monitoringUnit', loc)}
                 {' \u00b7 '}Provider: {settings.provider.type}
                 {' \u00b7 '}Model: {settings.provider.model}
               </div>

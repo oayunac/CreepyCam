@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import type { DetectionRecord, AppSettings } from '../types';
-import { getBehaviorLabel } from '../types';
+import { t } from '../i18n';
 import { createProvider, buildPrompt } from '../providers';
 
 export function useDetection(
@@ -47,12 +47,11 @@ export function useDetection(
       setRecords((prev) => [record, ...prev].slice(0, 100));
 
       if (result.detected && s.enableNotifications) {
-        const isStaring = result.behaviors.includes('staring_at_camera');
-        const title = isStaring
-          ? 'You caught me watching...'
-          : result.behaviors.map((b) => getBehaviorLabel(b, s)).join(', ');
-        const body = isStaring ? 'Wait... are YOU staring at ME?' : result.evidence;
-        sendNotification(title, body, frame.thumbnail);
+        sendNotification(
+          t('notifCaught', s.locale),
+          result.message,
+          frame.thumbnail,
+        );
       }
     } catch (e) {
       setLastError(e instanceof Error ? e.message : 'Analysis failed');
@@ -99,18 +98,18 @@ export function useDetection(
   return { records, isRunning, isAnalyzing, pendingThumbnail, lastError, startDetection, stopDetection, clearRecords: () => setRecords([]) };
 }
 
-function sendNotification(title: string, evidence: string, imageDataUrl: string) {
+function sendNotification(title: string, body: string, imageDataUrl: string) {
   if (!('Notification' in window)) return;
 
   if (Notification.permission === 'granted') {
     new Notification(`CreepyCam: ${title}`, {
-      body: evidence, icon: imageDataUrl, tag: 'creepycam-detection',
+      body, icon: imageDataUrl, tag: 'creepycam-detection',
     });
   } else if (Notification.permission !== 'denied') {
     Notification.requestPermission().then((perm) => {
       if (perm === 'granted') {
         new Notification(`CreepyCam: ${title}`, {
-          body: evidence, icon: imageDataUrl, tag: 'creepycam-detection',
+          body, icon: imageDataUrl, tag: 'creepycam-detection',
         });
       }
     });

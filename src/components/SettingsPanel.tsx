@@ -1,4 +1,6 @@
 import type { AppSettings, ProviderConfig } from '../types';
+import type { Locale } from '../i18n';
+import { t } from '../i18n';
 
 interface Props {
   settings: AppSettings;
@@ -16,6 +18,7 @@ function isMixedContentBlocked(providerUrl: string): boolean {
 }
 
 export function SettingsPanel({ settings, onChange, disabled }: Props) {
+  const loc = settings.locale;
   const updateProvider = (partial: Partial<ProviderConfig>) => {
     onChange({ ...settings, provider: { ...settings.provider, ...partial } });
   };
@@ -24,24 +27,34 @@ export function SettingsPanel({ settings, onChange, disabled }: Props) {
 
   return (
     <div className="settings-panel">
-      <h3>Settings</h3>
+      <h3>{t('settings', loc)}</h3>
+
+      <label>
+        Language / 语言
+        <select
+          value={settings.locale}
+          onChange={(e) => onChange({ ...settings, locale: e.target.value as Locale })}
+          disabled={disabled}
+        >
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+        </select>
+      </label>
 
       {mixedBlocked && (
         <div className="mixed-content-warning">
-          <div className="warning-badge">WARNING</div>
-          <strong>Mixed Content Blocked</strong>
-          <p>
-            This HTTPS page cannot reach your HTTP model API. Options:
-          </p>
+          <div className="warning-badge">{t('warningBadge', loc)}</div>
+          <strong>{t('mixedContentTitle', loc)}</strong>
+          <p>{t('mixedContentDesc', loc)}</p>
           <ol>
-            <li><strong>Use Chrome</strong> — Chrome allows HTTPS pages to access <code>localhost</code></li>
-            <li><strong>Run locally</strong> — <code>git clone &amp; npm run dev</code> on <code>http://localhost:5173</code></li>
+            <li><strong>{t('mixedChrome', loc)}</strong></li>
+            <li><strong>{t('mixedLocal', loc)}</strong></li>
           </ol>
         </div>
       )}
 
       <label>
-        Provider
+        {t('provider', loc)}
         <select
           value={settings.provider.type}
           onChange={(e) => {
@@ -62,7 +75,7 @@ export function SettingsPanel({ settings, onChange, disabled }: Props) {
       </label>
 
       <label>
-        Base URL
+        {t('baseUrl', loc)}
         <input
           type="text"
           value={settings.provider.baseUrl}
@@ -72,7 +85,7 @@ export function SettingsPanel({ settings, onChange, disabled }: Props) {
       </label>
 
       <label>
-        Model
+        {t('model', loc)}
         <input
           type="text"
           value={settings.provider.model}
@@ -83,7 +96,7 @@ export function SettingsPanel({ settings, onChange, disabled }: Props) {
 
       {(settings.provider.type === 'openai-compatible') && (
         <label>
-          API Key (optional)
+          {t('apiKey', loc)}
           <input
             type="password"
             value={settings.provider.apiKey || ''}
@@ -94,7 +107,7 @@ export function SettingsPanel({ settings, onChange, disabled }: Props) {
       )}
 
       <label>
-        Capture Interval (seconds)
+        {t('captureInterval', loc)}
         <input
           type="number"
           min={3}
@@ -106,7 +119,7 @@ export function SettingsPanel({ settings, onChange, disabled }: Props) {
       </label>
 
       <label>
-        Model Image Size (px)
+        {t('modelImageSize', loc)}
         <input
           type="number"
           min={128}
@@ -125,15 +138,15 @@ export function SettingsPanel({ settings, onChange, disabled }: Props) {
           onChange={(e) => onChange({ ...settings, enableNotifications: e.target.checked })}
           disabled={disabled}
         />
-        Enable Browser Notifications
+        {t('enableNotifications', loc)}
       </label>
 
       <div className="settings-hint">
-        <strong>Setup Notes</strong>
+        <strong>{t('setupNotes', loc)}</strong>
         <ul>
-          <li>Run this app locally (<code>npm run dev</code>) to avoid HTTPS mixed-content blocking</li>
-          <li>Ollama CORS: <code>OLLAMA_ORIGINS=* ollama serve</code></li>
-          <li>LM Studio: Enable CORS in server settings</li>
+          <li>{t('setupLocal', loc)}</li>
+          <li>{t('setupOllama', loc)}</li>
+          <li>{t('setupLmStudio', loc)}</li>
         </ul>
       </div>
     </div>

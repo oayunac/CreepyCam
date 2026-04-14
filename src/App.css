@@ -639,6 +639,11 @@ body {
   white-space: nowrap;
 }
 
+.whisper-text {
+  font-style: italic;
+  color: var(--text);
+}
+
 .history-info time {
   font-size: 11px;
   color: var(--text-dim);

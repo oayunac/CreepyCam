@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { AppSettings, BuiltinBehaviorType } from '../types';
-import { BUILTIN_BEHAVIORS, BUILTIN_LABELS } from '../types';
+import { BUILTIN_BEHAVIORS } from '../types';
+import { t, type StringKey } from '../i18n';
 
 interface Props {
   settings: AppSettings;
@@ -10,6 +11,7 @@ interface Props {
 export function BehaviorPanel({ settings, onChange }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [newLabel, setNewLabel] = useState('');
+  const loc = settings.locale;
 
   const toggleBuiltin = (b: BuiltinBehaviorType) => {
     const next = settings.enabledBuiltins.includes(b)
@@ -45,20 +47,15 @@ export function BehaviorPanel({ settings, onChange }: Props) {
     });
   };
 
-  const enabledCount =
-    settings.enabledBuiltins.length +
-    settings.enabledCustomIds.length;
-
-  const totalCount =
-    BUILTIN_BEHAVIORS.length +
-    settings.customBehaviors.length;
+  const enabledCount = settings.enabledBuiltins.length + settings.enabledCustomIds.length;
+  const totalCount = BUILTIN_BEHAVIORS.length + settings.customBehaviors.length;
 
   return (
     <div className={`behavior-panel ${expanded ? 'expanded' : ''}`}>
       <button className="behavior-toggle" onClick={() => setExpanded(!expanded)}>
         <span className="toggle-arrow">{expanded ? '\u25C0' : '\u25B6'}</span>
         <span className="toggle-label">
-          Watchlist
+          {t('watchlist', loc)}
           <span className="toggle-count">{enabledCount}/{totalCount}</span>
         </span>
       </button>
@@ -73,7 +70,7 @@ export function BehaviorPanel({ settings, onChange }: Props) {
                   checked={settings.enabledBuiltins.includes(b)}
                   onChange={() => toggleBuiltin(b)}
                 />
-                <span>{BUILTIN_LABELS[b]}</span>
+                <span>{t(b as StringKey, loc)}</span>
               </label>
             ))}
 
@@ -87,11 +84,7 @@ export function BehaviorPanel({ settings, onChange }: Props) {
                   />
                   <span>{c.label}</span>
                 </label>
-                <button
-                  className="remove-btn"
-                  onClick={() => removeCustom(c.id)}
-                  title="Remove"
-                >
+                <button className="remove-btn" onClick={() => removeCustom(c.id)} title="Remove">
                   &times;
                 </button>
               </div>
@@ -101,7 +94,7 @@ export function BehaviorPanel({ settings, onChange }: Props) {
           <div className="behavior-add">
             <input
               type="text"
-              placeholder="Add behavior..."
+              placeholder={t('addBehavior', loc)}
               value={newLabel}
               onChange={(e) => setNewLabel(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') addCustom(); }}

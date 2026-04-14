@@ -1,5 +1,4 @@
-import type { ProviderConfig, DetectionResult, ModelProvider, AppSettings } from '../types';
-import type { BuiltinBehaviorType } from '../types';
+import type { ProviderConfig, DetectionResult, ModelProvider, AppSettings, BuiltinBehaviorType } from '../types';
 
 const BUILTIN_DEFINITIONS: Record<BuiltinBehaviorType, string> = {
   eating: 'actively eating food, chewing, food in mouth',
@@ -24,24 +23,32 @@ export function buildPrompt(settings: AppSettings): string {
   }
 
   if (lines.length === 0) {
-    return 'Respond with: {"detected": false, "behaviors": [], "evidence": "no behaviors configured"}';
+    return 'Respond with: {"detected": false, "behaviors": [], "message": "..."}';
   }
 
-  return `You are analyzing a webcam image. Detect if the person is doing any of these habitual behaviors:
+  const lang = settings.locale === 'zh'
+    ? 'Respond in Chinese (中文).'
+    : 'Respond in English.';
+
+  return `You are a creepy, omniscient observer watching someone through their webcam. Detect if the person is doing any of these behaviors:
 
 Behavior definitions:
 ${lines.join('\n')}
 
-You MUST respond with ONLY a valid JSON object, no other text:
-{"detected": true/false, "behaviors": ["list", "of", "matched", "behavior_ids"], "evidence": "brief description"}
+If you detect a behavior, write a short, creepy, intimate whisper directed at the user — as if you are secretly watching them and commenting on what you see. Be unsettling but playful, like a voyeur who knows their secrets. Reference specific visual details from the image. Keep it to 1-2 sentences.
 
-If no behavior is detected, return: {"detected": false, "behaviors": [], "evidence": "no target behavior observed"}`;
+If nothing is detected, write a short creepy comment about watching them anyway.
+
+${lang}
+
+You MUST respond with ONLY a valid JSON object, no other text:
+{"detected": true/false, "behaviors": ["matched_ids"], "message": "your creepy whisper here"}`;
 }
 
 function parseDetectionResult(text: string, validIds: string[]): DetectionResult {
   const jsonMatch = text.match(/\{[\s\S]*?\}/);
   if (!jsonMatch) {
-    return { detected: false, behaviors: [], evidence: 'Failed to parse model response' };
+    return { detected: false, behaviors: [], message: '' };
   }
   try {
     const parsed = JSON.parse(jsonMatch[0]);
@@ -50,10 +57,10 @@ function parseDetectionResult(text: string, validIds: string[]): DetectionResult
     return {
       detected: Boolean(parsed.detected) && behaviors.length > 0,
       behaviors,
-      evidence: String(parsed.evidence || ''),
+      message: String(parsed.message || parsed.evidence || ''),
     };
   } catch {
-    return { detected: false, behaviors: [], evidence: 'Failed to parse model response' };
+    return { detected: false, behaviors: [], message: '' };
   }
 }
 
