@@ -89,14 +89,15 @@ export function useCamera() {
       // first frame as full-res evidence image
       const firstFull = frames[0].toDataURL('image/jpeg', 0.9);
 
-      // individual frame thumbnails for animation
-      const thumbScale = Math.min(160 / video.videoWidth, 90 / video.videoHeight);
+      // individual frame thumbnails for animation (same size as one grid cell)
+      const thumbW = Math.round(modelSize / cols);
+      const thumbH = Math.round((thumbW / video.videoWidth) * video.videoHeight);
       const frameThumbs = frames.map((f) => {
         const tc = document.createElement('canvas');
-        tc.width = Math.round(video.videoWidth * thumbScale);
-        tc.height = Math.round(video.videoHeight * thumbScale);
+        tc.width = thumbW;
+        tc.height = thumbH;
         tc.getContext('2d')!.drawImage(f, 0, 0, tc.width, tc.height);
-        return tc.toDataURL('image/jpeg', 0.7);
+        return tc.toDataURL('image/jpeg', 0.8);
       });
 
       // composite grid for model
