@@ -24,7 +24,11 @@ export function DetectionHistory({ records, settings, pendingThumbnail, onClear 
           &larr; {t('backToHistory', loc)}
         </button>
         <div className="evidence-image">
-          <img src={selectedRecord.fullImageDataUrl} alt="" />
+          {selectedRecord.frames.length > 1 ? (
+            <AnimatedFrames frames={selectedRecord.frames} className="evidence-anim" autoPlay />
+          ) : (
+            <img src={selectedRecord.fullImageDataUrl} alt="" />
+          )}
         </div>
         <div className="evidence-info">
           {selectedRecord.result.detected ? (

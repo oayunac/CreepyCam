@@ -67,13 +67,48 @@ export function BehaviorPanel({ settings, onChange }: Props) {
 
   return (
     <div className={`behavior-panel ${expanded ? 'expanded' : ''}`}>
-      <button className="behavior-toggle" onClick={() => setExpanded(!expanded)}>
-        <span className="toggle-arrow">{expanded ? '\u25C0' : '\u25B6'}</span>
-        <span className="toggle-label">
-          {t('watchlist', loc)}
-          <span className="toggle-count">{enabledCount}/{totalCount}</span>
-        </span>
-      </button>
+      <div className="behavior-sidebar">
+        <button className="behavior-toggle" onClick={() => setExpanded(!expanded)}>
+          <span className="toggle-arrow">{expanded ? '\u25C0' : '\u25B6'}</span>
+          <span className="toggle-label">
+            {t('watchlist', loc)}
+            <span className="toggle-count">{enabledCount}/{totalCount}</span>
+          </span>
+        </button>
+
+        <div className="panel-info-container" ref={infoRef}>
+          <button
+            className="info-btn"
+            onClick={() => setShowInfo(!showInfo)}
+            title="Info"
+          >
+            &#9432;
+          </button>
+          {showInfo && (
+            <div className="info-popup">
+              <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
+                oayunac/CreepyCam
+              </a>
+              <a
+                href={`${REPO_URL}/commit/${__COMMIT_FULL__}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="commit-link"
+              >
+                {__COMMIT_HASH__}
+              </a>
+              <a
+                href="https://buymeacoffee.com/oayunac"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bmc-link"
+              >
+                Buy me a coffee ☕
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
 
       {expanded && (
         <div className="behavior-content">
@@ -115,31 +150,6 @@ export function BehaviorPanel({ settings, onChange }: Props) {
               onKeyDown={(e) => { if (e.key === 'Enter') addCustom(); }}
             />
             <button onClick={addCustom} disabled={!newLabel.trim()}>+</button>
-          </div>
-
-          <div className="panel-info-container" ref={infoRef}>
-            <button
-              className="info-btn"
-              onClick={() => setShowInfo(!showInfo)}
-              title="Info"
-            >
-              &#9432;
-            </button>
-            {showInfo && (
-              <div className="info-popup">
-                <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
-                  oayunac/CreepyCam
-                </a>
-                <a
-                  href={`${REPO_URL}/commit/${__COMMIT_FULL__}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="commit-link"
-                >
-                  {__COMMIT_HASH__}
-                </a>
-              </div>
-            )}
           </div>
         </div>
       )}

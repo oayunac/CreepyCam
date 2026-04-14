@@ -5,11 +5,12 @@ interface Props {
   interval?: number;
   className?: string;
   alt?: string;
+  autoPlay?: boolean;
 }
 
-export function AnimatedFrames({ frames, interval = 300, className, alt = '' }: Props) {
+export function AnimatedFrames({ frames, interval = 300, className, alt = '', autoPlay = false }: Props) {
   const [index, setIndex] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(autoPlay);
   const timerRef = useRef<number | null>(null);
 
   const stopTimer = useCallback(() => {
