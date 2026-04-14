@@ -98,7 +98,7 @@ export function BehaviorPanel({ settings, onChange }: Props) {
                 {__COMMIT_HASH__}
               </a>
               <a
-                href="https://buymeacoffee.com/oayunac"
+                href="https://buymeacoffee.com/k5t7bgc47xw"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bmc-link"
