@@ -4,7 +4,7 @@
 
 CreepyCam is a browser-based habitual behavior tracker. It uses your webcam and a local vision model to catch your unconscious habits in real time — biting your nails, picking your face, sneaking snacks, and more.
 
-**[Live Demo (GitHub Pages)](https://oayunac.github.io/CreepyCam/)** | [中文说明](#中文说明)
+**[Live Demo (GitHub Pages)](https://oayunac.github.io/CreepyCam/)** | [中文说明](#中文说明) | [☕ Buy me a coffee](https://buymeacoffee.com/k5t7bgc47xw)
 
 ---
 
@@ -79,6 +79,12 @@ Enable CORS in your server settings panel.
 - Your detection accuracy depends entirely on the model you choose. Larger models give you better results but are slower.
 - Your detection history is in-memory only — you lose it when you refresh the page.
 - Custom behaviors are described by a short label you write; the model interprets them on a best-effort basis.
+
+## Support
+
+If you find this project fun or useful, buy me a coffee ☕
+
+**[☕ Buy me a coffee](https://buymeacoffee.com/k5t7bgc47xw)**
 
 ## Tech Stack
 
@@ -165,6 +171,12 @@ ollama pull gemma4
 - 你的检测精度完全取决于你选择的模型。更大的模型给你更好的结果，但速度更慢。
 - 你的检测历史仅在内存中——刷新页面就会丢失。
 - 自定义行为通过你写的短标签描述，模型会尽最大努力理解。
+
+## 支持
+
+如果你觉得这个项目有趣，请请我喝杯咖啡 ☕
+
+**[☕ Buy me a coffee](https://buymeacoffee.com/k5t7bgc47xw)**
 
 ## 技术栈
 

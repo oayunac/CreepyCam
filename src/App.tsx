@@ -63,13 +63,23 @@ function App() {
             <h1>{t('appName', loc)}</h1>
             <p className="subtitle">{t('subtitle', loc)}</p>
           </div>
-          <button
-            className="btn-icon"
-            onClick={() => setShowSettings(!showSettings)}
-            title={t('settings', loc)}
-          >
-            {showSettings ? '\u2715' : '\u2699'}
-          </button>
+          <div className="header-right">
+            <a
+              href="https://buymeacoffee.com/k5t7bgc47xw"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bmc-btn"
+            >
+              ☕ Buy me a coffee
+            </a>
+            <button
+              className="btn-icon"
+              onClick={() => setShowSettings(!showSettings)}
+              title={t('settings', loc)}
+            >
+              {showSettings ? '\u2715' : '\u2699'}
+            </button>
+          </div>
         </header>
 
         {showSettings && (
