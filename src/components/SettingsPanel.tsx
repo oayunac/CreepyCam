@@ -131,6 +131,19 @@ export function SettingsPanel({ settings, onChange, disabled }: Props) {
         />
       </label>
 
+      <label>
+        {t('maxTokens', loc)}
+        <input
+          type="number"
+          min={128}
+          max={4096}
+          step={64}
+          value={settings.maxTokens}
+          onChange={(e) => onChange({ ...settings, maxTokens: Number(e.target.value) })}
+          disabled={disabled}
+        />
+      </label>
+
       <label className="checkbox-label">
         <input
           type="checkbox"

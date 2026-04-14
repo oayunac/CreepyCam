@@ -49,6 +49,7 @@ export interface AppSettings {
   provider: ProviderConfig;
   captureIntervalSeconds: number;
   modelImageSize: number;
+  maxTokens: number;
   enableNotifications: boolean;
   enabledBuiltins: BuiltinBehaviorType[];
   customBehaviors: CustomBehavior[];
@@ -64,6 +65,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   },
   captureIntervalSeconds: 10,
   modelImageSize: 512,
+  maxTokens: 512,
   enableNotifications: true,
   enabledBuiltins: [...BUILTIN_BEHAVIORS],
   customBehaviors: [],

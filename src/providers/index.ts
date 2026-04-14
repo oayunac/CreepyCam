@@ -125,7 +125,7 @@ function createOpenAICompatibleProvider(config: ProviderConfig, settings: AppSet
               { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${imageBase64}` } },
             ],
           }],
-          max_tokens: 512,
+          max_tokens: settings.maxTokens,
           response_format: { type: 'json_object' },
         }),
       });

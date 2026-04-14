@@ -53,6 +53,7 @@ const strings = {
   apiKey: { en: 'API Key (optional)', zh: 'API Key（可选）' },
   captureInterval: { en: 'Capture Interval (seconds)', zh: '捕获间隔（秒）' },
   modelImageSize: { en: 'Model Image Size (px)', zh: '模型图片尺寸（像素）' },
+  maxTokens: { en: 'Max Tokens', zh: '最大 Token 数' },
   enableNotifications: { en: 'Enable Browser Notifications', zh: '启用浏览器通知' },
   setupNotes: { en: 'Setup Notes', zh: '配置说明' },
   setupLocal: { en: 'Run this app locally (npm run dev) to avoid HTTPS mixed-content blocking', zh: '本地运行（npm run dev）以避免 HTTPS 混合内容限制' },
