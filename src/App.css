@@ -174,6 +174,63 @@ body {
   cursor: not-allowed;
 }
 
+/* Panel info */
+.panel-info-container {
+  position: relative;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.info-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.info-btn:hover {
+  color: var(--text);
+}
+
+.info-popup {
+  position: absolute;
+  bottom: 32px;
+  left: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.info-popup a {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 13px;
+}
+.info-popup a:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+.commit-link {
+  font-family: monospace;
+  font-size: 12px !important;
+  color: var(--text-dim) !important;
+}
+.commit-link:hover {
+  color: var(--primary) !important;
+}
+
 /* Header */
 .app-header {
   display: flex;

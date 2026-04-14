@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { AppSettings, BuiltinBehaviorType } from '../types';
 import { BUILTIN_BEHAVIORS } from '../types';
 import { t, type StringKey } from '../i18n';
@@ -8,9 +8,24 @@ interface Props {
   onChange: (settings: AppSettings) => void;
 }
 
+const REPO_URL = 'https://github.com/oayunac/CreepyCam';
+
 export function BehaviorPanel({ settings, onChange }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [newLabel, setNewLabel] = useState('');
+  const [showInfo, setShowInfo] = useState(false);
+  const infoRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showInfo) return;
+    const handleClick = (e: MouseEvent) => {
+      if (infoRef.current && !infoRef.current.contains(e.target as Node)) {
+        setShowInfo(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showInfo]);
   const loc = settings.locale;
 
   const toggleBuiltin = (b: BuiltinBehaviorType) => {
@@ -100,6 +115,31 @@ export function BehaviorPanel({ settings, onChange }: Props) {
               onKeyDown={(e) => { if (e.key === 'Enter') addCustom(); }}
             />
             <button onClick={addCustom} disabled={!newLabel.trim()}>+</button>
+          </div>
+
+          <div className="panel-info-container" ref={infoRef}>
+            <button
+              className="info-btn"
+              onClick={() => setShowInfo(!showInfo)}
+              title="Info"
+            >
+              &#9432;
+            </button>
+            {showInfo && (
+              <div className="info-popup">
+                <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
+                  oayunac/CreepyCam
+                </a>
+                <a
+                  href={`${REPO_URL}/commit/${__COMMIT_FULL__}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="commit-link"
+                >
+                  {__COMMIT_HASH__}
+                </a>
+              </div>
+            )}
           </div>
         </div>
       )}
